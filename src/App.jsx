@@ -19,6 +19,7 @@ import {
   Users,
   ChevronRight
 } from 'lucide-react'
+import DeviceManager from "./features/device-management/DeviceManager";
 
 // Data
 const categories = [
@@ -523,6 +524,7 @@ export default function App() {
         <HeroSection />
         <CategoryButtons />
         <FeaturedDevices />
+        <DeviceManager />
       </main>
       <Footer />
     </div>
