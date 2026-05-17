@@ -514,125 +514,17 @@ function Footer() {
   )
 }
 
-const inputStyle = {
-  width: "100%", padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e2e8f0",
-  fontSize: 15, fontFamily: "inherit", color: "#0f172a", outline: "none",
-  background: "#f8fafc", boxSizing: "border-box",
-};
-
-function Toast({ toasts, remove }) {
-  return (
-    <div style={{ position: "fixed", top: 20, right: 20, zIndex: 9999, display: "flex", flexDirection: "column", gap: 10 }}>
-      {toasts.map(t => (
-        <div key={t.id} onClick={() => remove(t.id)} style={{
-          background: t.type === "success" ? "#0f172a" : "#1e293b",
-          color: "#f8fafc", padding: "14px 20px", borderRadius: 12, fontSize: 14,
-          fontWeight: 500, display: "flex", alignItems: "center", gap: 10,
-          boxShadow: "0 8px 32px rgba(0,0,0,0.25)", cursor: "pointer", minWidth: 260,
-          borderLeft: `4px solid ${t.type === "success" ? "#34d399" : t.type === "info" ? "#60a5fa" : "#f87171"}`,
-        }}>
-          <span>{t.type === "success" ? "✅" : t.type === "info" ? "ℹ️" : "❌"}</span>
-          {t.message}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Modal({ title, onClose, children }) {
-  return (
-    <div onClick={onClose} style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000,
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: "#fff", borderRadius: 20, padding: 32, width: "100%", maxWidth: 480,
-        boxShadow: "0 24px 64px rgba(0,0,0,0.18)", fontFamily: "inherit",
-      }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>{title}</h2>
-          <button onClick={onClose} style={{ border: "none", background: "#f1f5f9", cursor: "pointer", borderRadius: 8, width: 32, height: 32, fontSize: 16 }}>✕</button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function Field({ label, children }) {
-  return (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#64748b", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</label>
-      {children}
-    </div>
-  );
-}
-
-// New **Main App Component
+// Main App Component
 export default function App() {
-  const [devices, setDevices] = useState([]);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [page, setPage] = useState("dashboard");
-  const [toasts, setToasts] = useState([]);
-  const [requestModal, setRequestModal] = useState(null);
-  const [requestName, setRequestName] = useState("");
-  const [requestReason, setRequestReason] = useState("");
-  const [form, setForm] = useState({ name: "", category: "Laptop", assignedTo: "" });
-  const [formError, setFormError] = useState("");
-
-  const addToast = (message, type = "success") => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3500);
-  };
-
-  const handleRequest = () => {
-    if (!requestName.trim()) return;
-    setDevices(prev => prev.map(d => d.id === requestModal.id ? { ...d, status: "Requested", assignedTo: requestName.trim() } : d));
-    setRequestModal(null); setRequestName(""); setRequestReason("");
-    addToast("Request Sent Successfully! 🎉", "success");
-  };
-
-  const handleDelete = id => {
-    setDevices(prev => prev.filter(d => d.id !== id));
-    addToast("Device removed.", "info");
-  };
-
-  const handleAddDevice = () => {
-    if (!form.name.trim()) { setFormError("Device name is required."); return; }
-    setFormError("");
-    setDevices(prev => [{ id: Date.now(), name: form.name.trim(), category: form.category, status: form.assignedTo.trim() ? "In Use" : "Available", assignedTo: form.assignedTo.trim() }, ...prev]);
-    setForm({ name: "", category: "Laptop", assignedTo: "" });
-    addToast("Device added successfully!", "success");
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-purple-950">
-      <Toast toasts={toasts} remove={id => setToasts(prev => prev.filter(t => t.id !== id))} />
-
-      {requestModal && (
-        <Modal title={`Request: ${requestModal.name}`} onClose={() => setRequestModal(null)}>
-          <Field label="Your Name *">
-            <input style={inputStyle} placeholder="Your name" value={requestName} onChange={e => setRequestName(e.target.value)} />
-          </Field>
-          <Field label="Reason (optional)">
-            <textarea style={{ ...inputStyle, resize: "vertical", minHeight: 80 }} placeholder="Why do you need this?" value={requestReason} onChange={e => setRequestReason(e.target.value)} />
-          </Field>
-          <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-            <button onClick={() => setRequestModal(null)} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: "1.5px solid #e2e8f0", background: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#64748b" }}>Cancel</button>
-            <button onClick={handleRequest} disabled={!requestName.trim()} style={{ flex: 2, padding: "11px 0", borderRadius: 10, border: "none", background: !requestName.trim() ? "#e2e8f0" : "#6366f1", color: !requestName.trim() ? "#94a3b8" : "#fff", cursor: !requestName.trim() ? "not-allowed" : "pointer", fontWeight: 700, fontSize: 14 }}>Send Request</button>
-          </div>
-        </Modal>
-      )}
-
       <Navbar />
       <main>
         <HeroSection />
         <CategoryButtons />
-        <FeaturedDevices onRequest={setRequestModal} />
+        <FeaturedDevices />
       </main>
       <Footer />
     </div>
-  );
+  )
 }
