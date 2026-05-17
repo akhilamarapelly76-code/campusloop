@@ -531,6 +531,7 @@ export default function App() {
 
      <section id="list">
         <FeaturedDevices />
+        <DeviceManager />
       </section>
     </main>
     <section id="about">
