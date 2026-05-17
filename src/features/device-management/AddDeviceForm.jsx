@@ -1,18 +1,20 @@
+import { addDevice } from "../firebase/dbServices";
 import React, { useState } from "react";
 
 export default function AddDeviceForm({ onAdd }) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !category) return;
 
-    onAdd({
-      id: Date.now(),
-      name,
-      category,
+    await addDevice({
+     name,
+     category,
+     status: "available",
+     createdAt: new Date().toISOString()
     });
 
     setName("");

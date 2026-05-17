@@ -520,13 +520,22 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-purple-950">
       <Navbar />
-      <main>
-        <HeroSection />
+    <main>
+      <section id="browse">
+       <HeroSection />
+      </section>
+
+     <section id="how-it-works">
         <CategoryButtons />
+      </section>
+
+     <section id="list">
         <FeaturedDevices />
-        <DeviceManager />
-      </main>
-      <Footer />
+      </section>
+    </main>
+    <section id="about">
+       <Footer />
+    </section>
     </div>
   )
 }
